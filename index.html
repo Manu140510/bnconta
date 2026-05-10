@@ -211,6 +211,7 @@ body{
     min-height:180px;
     transition:0.3s;
     cursor:pointer;
+    position:relative;
 }
 
 .card:hover{
@@ -347,9 +348,9 @@ body{
 
             <!-- CARD 1 -->
 
-            <div class="card">
+            <div class="card" onclick="openBlock()">
 
-                <button class="delete-btn" onclick="removeCard(this)">
+                <button class="delete-btn" onclick="removeCard(event,this)">
                     ✖
                 </button>
 
@@ -363,9 +364,9 @@ body{
 
             <!-- CARD 2 -->
 
-            <div class="card">
+            <div class="card" onclick="openBlock()">
 
-                <button class="delete-btn" onclick="removeCard(this)">
+                <button class="delete-btn" onclick="removeCard(event,this)">
                     ✖
                 </button>
 
@@ -379,9 +380,9 @@ body{
 
             <!-- CARD 3 -->
 
-            <div class="card">
+            <div class="card" onclick="openBlock()">
 
-                <button class="delete-btn" onclick="removeCard(this)">
+                <button class="delete-btn" onclick="removeCard(event,this)">
                     ✖
                 </button>
 
@@ -436,6 +437,14 @@ window.onclick = function(event){
 
 }
 
+/* ABRIR LINK */
+
+function openBlock(){
+
+    window.location.href = "https://manu140510.github.io/blocodenotas/";
+
+}
+
 /* ADICIONAR BLOCO */
 
 function addCard(){
@@ -452,9 +461,11 @@ function addCard(){
 
     card.classList.add("card");
 
+    card.onclick = openBlock;
+
     card.innerHTML = `
 
-        <button class="delete-btn" onclick="removeCard(this)">
+        <button class="delete-btn" onclick="removeCard(event,this)">
             ✖
         </button>
 
@@ -474,7 +485,9 @@ function addCard(){
 
 /* REMOVER BLOCO */
 
-function removeCard(button){
+function removeCard(event, button){
+
+    event.stopPropagation();
 
     button.parentElement.remove();
 
