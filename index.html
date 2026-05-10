@@ -270,8 +270,6 @@ body{
 
 <div class="sidebar">
 
-    <!-- MENU -->
-
     <div class="dropdown">
 
         <button onclick="toggleMenu()" class="dropbtn">
@@ -319,13 +317,9 @@ body{
 
         <div style="display:flex;align-items:center;gap:12px;">
 
-            <!-- NOME -->
-
             <span id="profileName" style="font-weight:bold;">
                 Usuário
             </span>
-
-            <!-- FOTO -->
 
             <div class="profile" onclick="document.getElementById('uploadProfile').click()">
 
@@ -350,61 +344,11 @@ body{
 
     <div class="main">
 
-        <!-- BANNER -->
-
         <div class="banner"></div>
 
         <!-- BLOCOS -->
 
         <div class="notes" id="notesContainer">
-
-            <!-- CARD 1 -->
-
-            <div class="card" onclick="openBlock()">
-
-                <button class="delete-btn" onclick="removeCard(event,this)">
-                    ✖
-                </button>
-
-                <h2>Anotações</h2>
-
-                <p>
-                    Suas ideias e lembretes.
-                </p>
-
-            </div>
-
-            <!-- CARD 2 -->
-
-            <div class="card" onclick="openBlock()">
-
-                <button class="delete-btn" onclick="removeCard(event,this)">
-                    ✖
-                </button>
-
-                <h2>Projetos</h2>
-
-                <p>
-                    Organize suas tarefas.
-                </p>
-
-            </div>
-
-            <!-- CARD 3 -->
-
-            <div class="card" onclick="openBlock()">
-
-                <button class="delete-btn" onclick="removeCard(event,this)">
-                    ✖
-                </button>
-
-                <h2>Importante</h2>
-
-                <p>
-                    Informações rápidas.
-                </p>
-
-            </div>
 
             <!-- BOTÃO + -->
 
@@ -457,17 +401,35 @@ function openBlock(){
 
 }
 
-/* ADICIONAR BLOCO */
+/* SALVAR BLOCOS */
 
-function addCard(){
+function saveCards(){
 
-    let title = prompt("Nome do bloco:");
+    let cards = [];
 
-    if(title == null || title == ""){
-        return;
-    }
+    document.querySelectorAll(".card").forEach(card => {
 
-    let text = prompt("Descrição do bloco:");
+        if(card.classList.contains("add")){
+            return;
+        }
+
+        let title = card.querySelector("h2").innerText;
+        let text = card.querySelector("p").innerText;
+
+        cards.push({
+            title:title,
+            text:text
+        });
+
+    });
+
+    localStorage.setItem("cards", JSON.stringify(cards));
+
+}
+
+/* CRIAR CARD */
+
+function createCard(title, text){
 
     let card = document.createElement("div");
 
@@ -495,6 +457,24 @@ function addCard(){
 
 }
 
+/* ADICIONAR BLOCO */
+
+function addCard(){
+
+    let title = prompt("Nome do bloco:");
+
+    if(title == null || title == ""){
+        return;
+    }
+
+    let text = prompt("Descrição do bloco:");
+
+    createCard(title, text);
+
+    saveCards();
+
+}
+
 /* REMOVER BLOCO */
 
 function removeCard(event, button){
@@ -502,6 +482,8 @@ function removeCard(event, button){
     event.stopPropagation();
 
     button.parentElement.remove();
+
+    saveCards();
 
 }
 
@@ -558,8 +540,6 @@ function changeProfile(event){
 
             document.getElementById("profileLetter").style.display = "none";
 
-            /* SALVAR FOTO */
-
             localStorage.setItem("profileImage", e.target.result);
 
         }
@@ -570,7 +550,7 @@ function changeProfile(event){
 
 }
 
-/* CARREGAR PERFIL */
+/* CARREGAR PERFIL E BLOCOS */
 
 window.onload = function(){
 
@@ -596,8 +576,6 @@ window.onload = function(){
 
     document.getElementById("profileName").innerText = userName;
 
-    /* PRIMEIRA LETRA */
-
     document.getElementById("profileLetter").innerText =
     userName.charAt(0).toUpperCase();
 
@@ -614,6 +592,22 @@ window.onload = function(){
         img.style.display = "block";
 
         document.getElementById("profileLetter").style.display = "none";
+
+    }
+
+    /* CARREGAR BLOCOS */
+
+    let savedCards = localStorage.getItem("cards");
+
+    if(savedCards){
+
+        let cards = JSON.parse(savedCards);
+
+        cards.forEach(card => {
+
+            createCard(card.title, card.text);
+
+        });
 
     }
 
