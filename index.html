@@ -317,18 +317,30 @@ body{
 
         <!-- PERFIL -->
 
-        <div class="profile" onclick="document.getElementById('uploadProfile').click()">
+        <div style="display:flex;align-items:center;gap:12px;">
 
-            <img id="profileImage" src="" alt="">
+            <!-- NOME -->
 
-            <span id="profileLetter">U</span>
+            <span id="profileName" style="font-weight:bold;">
+                Usuário
+            </span>
 
-            <input 
-            type="file" 
-            id="uploadProfile" 
-            accept="image/png, image/jpeg"
-            onchange="changeProfile(event)"
-            hidden>
+            <!-- FOTO -->
+
+            <div class="profile" onclick="document.getElementById('uploadProfile').click()">
+
+                <img id="profileImage" src="" alt="">
+
+                <span id="profileLetter">U</span>
+
+                <input 
+                type="file" 
+                id="uploadProfile" 
+                accept="image/png, image/jpeg"
+                onchange="changeProfile(event)"
+                hidden>
+
+            </div>
 
         </div>
 
@@ -558,9 +570,38 @@ function changeProfile(event){
 
 }
 
-/* CARREGAR FOTO SALVA */
+/* CARREGAR PERFIL */
 
 window.onload = function(){
+
+    /* NOME */
+
+    let userName = localStorage.getItem("userName");
+
+    if(!userName){
+
+        userName = prompt("Digite seu nome:");
+
+        if(userName){
+
+            localStorage.setItem("userName", userName);
+
+        }else{
+
+            userName = "Usuário";
+
+        }
+
+    }
+
+    document.getElementById("profileName").innerText = userName;
+
+    /* PRIMEIRA LETRA */
+
+    document.getElementById("profileLetter").innerText =
+    userName.charAt(0).toUpperCase();
+
+    /* FOTO */
 
     let savedImage = localStorage.getItem("profileImage");
 
